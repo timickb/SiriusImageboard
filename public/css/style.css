@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand|Titillium+Web');
+
+* {
+    font-family: 'Titillium Web', 'Calibri Light', 'sans-serif';
+    margin: 0;
+    color: white;
+}
+body {
+    background: rgb(40, 40, 40);
+    font-size: 14pt;
+}
+
+#header {
+    margin: 10px;
+    padding: 20px;
+    background: rgb(65, 65, 65);
+    border-radius: 9px;
+}
+
+#content {
+    margin: 10px;
+    padding: 20px;
+    background: rgb(65, 65, 65);
+    border-radius: 9px;
+}
+
+#footer {
+    margin: 10px;
+    padding: 20px;
+    background: rgb(65, 65, 65);
+    border-radius: 9px;
+}
+
+a#logo {
+    font-size: 32pt;
+    display: inline-block;
+    text-decoration: none;
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
+#menu {
+    display: inline-block;
+    font-size: 18pt;
+    padding-left: 7px;
+}
+
+a.menu-item {
+    text-decoration: none;
+    display: inline-block;
+    padding: 7px;
+    margin: 7px;
+    background: rgb(50, 50, 50);
+    border-radius: 9px;
+}
+
+h1 {
+    font-family: Calibri Light;
+}
+
+input.field {
+    font-family: 'Titillium Web';
+    font-size: 14pt;
+    padding: 10px;
+    margin: 10px;
+    background: rgb(230, 230, 230);
+    border: none;
+    border-radius: 9px;
+    color: rgb(35, 35, 35);
+}
+
+input.button {
+    font-size: 14pt;
+    padding: 10px;
+    margin: 10px;
+    background: rgb(50, 50, 50);
+    color: white;
+    border: none;
+    border-radius: 9px;
+}
+input.button:hover {
+    background: rgb(35, 35, 35);
+}

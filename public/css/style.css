@@ -15,6 +15,8 @@ body {
     padding: 10px;
     background: rgb(65, 65, 65);
     border-radius: 9px;
+    white-space: nowrap;
+    word-wrap: none;
 }
 
 #content {
@@ -52,7 +54,12 @@ a.menu-item {
     padding: 7px;
     margin: 7px;
     background: rgb(50, 50, 50);
-    /*border-radius: 9px;*/
+    white-space: nowrap;
+    max-width: 170px;
+    text-align: center;
+}
+a.menu-item:hover {
+    background: deepskyblue;
 }
 
 h1 {
@@ -110,6 +117,10 @@ h1 {
 
 .topic-title {
     font-size: 22pt;
+    text-decoration: none;
+}
+.topic-title:hover {
+    color: deepskyblue;
 }
 .topic-header {
     float: right;

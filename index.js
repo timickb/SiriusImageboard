@@ -24,11 +24,14 @@ var logger = (type, message) => {
 var connection = mysql.createConnection({
     host     : config.mysql.host,
     user     : config.mysql.user,
-    password : config.mysql.password
+    password : config.mysql.password,
+    database : config.mysql.database
   });
   
-connection.connect();
-
+connection.connect(err => {
+    if (err) throw err;
+    console.log('MySQL connected');
+});
 //---------------------------------------------------
 
 app = express();
@@ -44,15 +47,33 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render('login');
+    res.render('login', {status: undefined});
 });
 app.post('/login', (req, res) => {
     let login = req.body.login;
     let password = req.body.password;
+    if(security.checkLogin(login) && security.checkPassword(password)) {
+        password = security.sha256(password);
+        let query = "SELECT * FROM users WHERE login='"+login+"' AND password='"+password+"'";
+        connection.query(query, (err, result) => {
+            if(err) {
+                res.render('login', {status: 'MySQL error'});
+            } else {
+                if(result.length > 0) {
+                    res.render('index', {session: 'authorized'});
+                } else {
+                    res.render('login', {status: 'Wrong login or password'});
+                }
+        }
+        });
+    } else {
+        res.render('login', {status: 'Disallowed characters'});
+    }
+    
 });
 
 app.get('/register', (req, res) => {
-    res.render('register');
+    res.render('register', {status: undefined});
 });
 app.post('/register', (req, res) => {
     let status;
@@ -61,14 +82,32 @@ app.post('/register', (req, res) => {
     let repassword = req.body.repassword;
     let email = req.body.email;
     if(security.checkLogin(login) && security.checkPassword(password) && security.checkEmail(email)) {
-        status = 'passwords don\'t match';
         if(password === repassword) {
-            status = 'correct';
+            //Проверим логин и email на уникальность
+            connection.query("SELECT * FROM users", (err, result) => {
+                for(var i = 0 ; i < result.length; i++) {
+                    if(result[i].login == login || result[i].email == email) {
+                        res.render('register', {status: 'Login or email already exist'});
+                        return;
+                    }
+                }
+            });
+            password = security.sha256(password);
+            query = "INSERT INTO users " + 
+                "VALUES('', '"+login+"', '"+password+"', '"+email+"', "+Date.now()+")";
+            connection.query(query, (err, result) => {
+                if(!err) {
+                    res.render('login', {status: 'You was successfully registered'});
+                } else {
+                    res.render('register', {status: 'MySQL error occured'});
+                }
+            });
+        } else {
+            res.render('register', {status: 'Passwords don\'t match'});
         }
     } else {
-        status = 'invalid data';
+        res.render('register', {status: 'Incorrect data'});
     }
-    res.end(status);
 });
 
 app.get('/topic/:id', (req, res) => {

@@ -172,3 +172,10 @@ textarea {
 .file-upload span {
     line-height: 36px; /* Делаем вертикальное выравнивание текста, который написан на кнопке */
 }
+
+#reg-status {
+    background: deepskyblue;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 9px;
+}

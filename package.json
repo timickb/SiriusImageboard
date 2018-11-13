@@ -9,6 +9,7 @@
   "author": "timickb",
   "license": "ISC",
   "dependencies": {
+    "crypto": "^1.0.1",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "mongoose": "^5.3.11",

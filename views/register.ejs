@@ -1,5 +1,10 @@
 <% include header.ejs %>
 <h1>Signing up</h1>
+<% if(status) { %>
+    <div id="reg-status">
+        <%= status %>
+    </div>
+<% } %>
 <form method="post" name="signup">
     <input type="text" class="field" placeholder="Login" name="login" required /><br />
     <input type="text" class="field" placeholder="E-mail" name="email" required /><br />

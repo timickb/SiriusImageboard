@@ -1,3 +1,9 @@
 {
-    "port": 80
+    "port": 80,
+    "mysql": {
+        "host": "localhost",
+        "database": "imageboard",
+        "user": "root",
+        "password": ""
+    }
 }

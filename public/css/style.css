@@ -58,7 +58,7 @@ h1 {
     font-family: Calibri Light;
 }
 
-input.field {
+.field {
     font-family: 'Titillium Web';
     font-size: 14pt;
     padding: 10px;
@@ -69,7 +69,7 @@ input.field {
     color: rgb(35, 35, 35);
 }
 
-input.button {
+.button {
     font-size: 14pt;
     padding: 10px;
     margin: 10px;
@@ -78,6 +78,38 @@ input.button {
     border: none;
     border-radius: 9px;
 }
-input.button:hover {
-    background: rgb(35, 35, 35);
+.button:hover {
+    background: deepskyblue;
+}
+
+.topic {
+    background: rgb(50, 50, 50);
+    padding: 10px;
+    margin: 10px;
+    border-radius: 9px;
+}
+
+.topic-block-detail {
+    display: inline-block;
+    background: rgb(60, 60, 60);
+    padding: 5px;
+}
+
+.topic-info {
+    background: rgb(50, 50, 50);
+    padding: 10px;
+    margin: 10px;
+}
+
+.blue-colored {
+    background: deepskyblue;
+}
+
+.topic-title {
+    font-size: 22pt;
+}
+
+a.footer-menu-item {
+    display: inline-block;
+    color: deepskyblue;
 }

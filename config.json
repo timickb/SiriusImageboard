@@ -1,9 +1,7 @@
 {
     "port": 80,
-    "mysql": {
+    "mongodb": {
         "host": "localhost",
-        "database": "imageboard",
-        "user": "root",
-        "password": ""
+        "database": "imageboard"
     }
 }

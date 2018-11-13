@@ -1,27 +1,39 @@
+/*
+    Copyright by Timur Batrutdinov
+*/
+
 var express = require('express');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var fs = require('fs');
 var config = require('./config');
 var security = require('./security');
-var mysql = require('mysql');
 
+//---------------------------------------------------
 
-console.log('Starting MySQL connection...');
-var conn = mysql.createConnection({
-    host: config.mysql.host,
-    user: config.mysql.user,
-    password: config.mysql.password
-});
-/*conn.connect(err => {
-    if (err) throw err;
-    console.log('MySQL connected');
-})*/
+fs.mkdir('./logs', () => {});
+
+var logger = (type, message) => {
+    console.log('['+type+'] ' + message)
+}
+
+//---------------------------------------------------
+
+var mongoDB = 'mongodb://'+config.mongodb.host+'/'+config.mongodb.database;
+mongoose.connect(mongoDB);
+mongoose.Promise = global.Promise;
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+//---------------------------------------------------
 
 app = express();
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
+
+//---------------------------------------------------
 
 app.get('/', (req, res) => {
     res.render('index');
@@ -62,5 +74,7 @@ app.get('/topic/:id', (req, res) => {
 app.get('/settings', (req, res) => {
     res.render('settings');
 })
+
+//---------------------------------------------------
 
 app.listen(config.port, () => console.log('Server started at port ' + config.port));

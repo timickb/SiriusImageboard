@@ -59,4 +59,8 @@ app.get('/topic/:id', (req, res) => {
     res.render('topic');
 });
 
+app.get('/settings', (req, res) => {
+    res.render('settings');
+})
+
 app.listen(config.port, () => console.log('Server started at port ' + config.port));

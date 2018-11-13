@@ -62,7 +62,7 @@ h1 {
     font-family: 'Titillium Web';
     font-size: 14pt;
     padding: 10px;
-    margin: 10px;
+    margin: 5px;
     background: rgb(230, 230, 230);
     border: none;
     border-radius: 9px;
@@ -72,7 +72,7 @@ h1 {
 .button {
     font-size: 14pt;
     padding: 10px;
-    margin: 10px;
+    margin: 5px;
     background: rgb(50, 50, 50);
     color: white;
     border: none;
@@ -98,7 +98,8 @@ h1 {
 .topic-info {
     background: rgb(50, 50, 50);
     padding: 10px;
-    margin: 10px;
+    margin: 5px;
+    border-radius: 9px;
 }
 
 .blue-colored {

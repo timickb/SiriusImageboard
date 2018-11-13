@@ -39,6 +39,12 @@ a#logo {
     text-decoration: none;
     padding-left: 7px;
     padding-right: 7px;
+    color: rgb(50, 50, 50);
+    background: rgb(220, 220, 220);
+    border-radius: 10px;
+}
+a#logo:hover {
+    background: white;
 }
 
 #menu {
@@ -134,4 +140,35 @@ a.footer-menu-item {
 
 textarea {
     width: 90%;
+}
+
+.file-upload {
+    position: relative; /* Даем возможность делать позиционирование, внутри данного элемента */
+    overflow: hidden; /* Все что выходит за пределы - скрываем */
+    width: 80px; /* Задаем ширину кнопки выбора файла */
+    height: 20px; /* Задаем высоту кнопки выбора файла */
+    background: rgb(50, 50, 50);
+    border-radius: 9px;
+    padding: 10px;
+    color: #fff;
+    text-align: center;
+}
+.file-upload:hover {
+    background: deepskyblue;
+}
+.file-upload input[type="file"]{
+   display: none; /* Обязательно скрываем настоящий Input File */
+}
+.file-upload label {
+    /* Растягиваем label на всю возможную площадь блока .file-upload */
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+.file-upload span {
+    line-height: 36px; /* Делаем вертикальное выравнивание текста, который написан на кнопке */
 }

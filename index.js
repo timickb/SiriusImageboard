@@ -4,8 +4,10 @@
 
 var express = require('express');
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
+//var session = require('express-session');
+//var cookieParser = require('cookie-parser');
 var fs = require('fs');
+var mysql = require('mysql');
 var config = require('./config');
 var security = require('./security');
 
@@ -19,11 +21,13 @@ var logger = (type, message) => {
 
 //---------------------------------------------------
 
-var mongoDB = 'mongodb://'+config.mongodb.host+'/'+config.mongodb.database;
-mongoose.connect(mongoDB);
-mongoose.Promise = global.Promise;
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+var connection = mysql.createConnection({
+    host     : config.mysql.host,
+    user     : config.mysql.user,
+    password : config.mysql.password
+  });
+  
+connection.connect();
 
 //---------------------------------------------------
 

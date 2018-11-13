@@ -1,3 +1,7 @@
+/*
+    Copyright by Timur Batrutdinov
+*/
+
 let checkLogin = login => {
     if(login.length > 3 && login.length < 21) {
         if(login.match('[a-zA-Z0-9]')) {

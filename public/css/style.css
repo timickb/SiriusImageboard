@@ -12,14 +12,14 @@ body {
 
 #header {
     margin: 10px;
-    padding: 20px;
+    padding: 10px;
     background: rgb(65, 65, 65);
     border-radius: 9px;
 }
 
 #content {
     margin: 10px;
-    padding: 20px;
+    padding: 10px;
     background: rgb(65, 65, 65);
     border-radius: 9px;
 }
@@ -32,7 +32,7 @@ body {
 }
 
 a#logo {
-    font-size: 32pt;
+    font-size: 28pt;
     display: inline-block;
     text-decoration: none;
     padding-left: 7px;
@@ -43,6 +43,7 @@ a#logo {
     display: inline-block;
     font-size: 18pt;
     padding-left: 7px;
+    float: right;
 }
 
 a.menu-item {
@@ -51,7 +52,7 @@ a.menu-item {
     padding: 7px;
     margin: 7px;
     background: rgb(50, 50, 50);
-    border-radius: 9px;
+    /*border-radius: 9px;*/
 }
 
 h1 {
@@ -85,7 +86,8 @@ h1 {
 .topic {
     background: rgb(50, 50, 50);
     padding: 10px;
-    margin: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
     border-radius: 9px;
 }
 
@@ -109,8 +111,16 @@ h1 {
 .topic-title {
     font-size: 22pt;
 }
+.topic-header {
+    float: right;
+    display: inline-block;
+}
 
 a.footer-menu-item {
     display: inline-block;
     color: deepskyblue;
+}
+
+textarea {
+    width: 90%;
 }

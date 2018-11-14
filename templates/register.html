@@ -1,10 +1,10 @@
-<% include header.ejs %>
+{% include 'header.html' %}
 <h1>Signing up</h1>
-<% if(status) { %>
+{% if status %}
     <div id="reg-status">
-        <%= status %>
+        {{ status }}
     </div>
-<% } %>
+{% endif %}
 <form method="post" name="signup">
     <input type="text" class="field" placeholder="Login" name="login" required /><br />
     <input type="text" class="field" placeholder="E-mail" name="email" required /><br />
@@ -12,4 +12,4 @@
     <input type="password" class="field" placeholder="Retype password" name="repassword" required /><br />
     <input type="submit" value="Sign up" class="button" id="signin-action"/>
 </form>
-<% include footer.ejs %>
+{% include 'footer.html' %}

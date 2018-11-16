@@ -1,8 +1,6 @@
-from flask import Flask
-from flask import render_template
-from flask import request
+from flask import Flask, request, render_template, session, Session
 from flaskext.mysql import MySQL
-from security import 
+from database import Database
 
 #---------------------------------------------------
 
@@ -12,15 +10,14 @@ mysql = MySQL()
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = ''
-app.config['MYSQL_DATABASE_DB'] = 'board'
+app.config['MYSQL_DATABASE_PASSWORD'] = '12345'
+app.config['MYSQL_DATABASE_DB'] = 'forum'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
 conn = mysql.connect()
 cursor = conn.cursor()
-
-sec = Security()
+database = Database(conn, cursor)
 
 #---------------------------------------------------
 
@@ -32,6 +29,10 @@ def index():
 def login():
     if request.method == 'GET':
         return render_template('login.html')
+    elif request.method == 'POST':
+        result = database.loginUser(request.form.get('login'), request.form.get('password'))
+        if result['status'] == 'OK':
+            user = result['data']
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -43,20 +44,13 @@ def register():
         password = request.form.get('password')
         rpassword = request.form.get('rpassword')
         email = request.form.get('email')
-        if sec.checkLogin(login) and sec.checkEmail(email) and sec.checkPassword(password):
-            if password === rpassword:
-                # Проверка логина и email на уникальность
-                cursor.execute("SELECT * FROM users WHERE login={0} OR email={1}"
-                    .format(login, email))
-                if len(cursor.fetchall()) == 0:
-                    # Записываем его в бд
-                    sql = "INSERT INTO users VALUES('', '{0}', '{1}', '{3}')"
-                else:
-                    return render_template('register.html', status='Login or email already exists')
-            else:
-                return render_template('register.html', status='Passwords don\'t match')
-        else:
-            return render_template('register.html', status='Invalid symbols')
+
+        result = database.regUser(login, password, rpassword, email)
+        if result['status'] == 'OK':
+            return render_template('index.html', data=result['data'])
+        elif result['status'] == 'Error':
+            return render_template('register.html', status=result['text'])
+        
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     if request.method == 'GET':

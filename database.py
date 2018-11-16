@@ -8,7 +8,7 @@ def getStrDate(unix):
 
 def getDictFromTuple(tpl, table):
     USERS = ('id', 'login', 'password', 'email', 'regTime')
-    TOPICS = ('id', 'title', 'creationTime', 'authorID', 'rating')
+    TOPICS = ('id', 'title', 'description', 'creationTime', 'authorID', 'rating')
     MESSAGES = ('id', 'text', 'creationTime', 'topicID', 'authorID', 'image')
     gresult = []
     for element in tpl:
@@ -19,8 +19,8 @@ def getDictFromTuple(tpl, table):
         elif table == 'topics':
             for i in range(len(element)):
                 result[TOPICS[i]] = element[i]
-        else:
-            for i in range(len(tpl)):
+        elif table == 'messages':
+            for i in range(len(element)):
                 result[MESSAGES[i]] = element[i]
         gresult.append(result)
     return gresult
@@ -57,7 +57,6 @@ class Database():
             )
             self.cursor.execute(sql)
             self.conn.commit()
-
     
     # Get topics
     def getTopicsList(self):
@@ -91,6 +90,19 @@ class Database():
         self.cursor.execute("SELECT * FROM messages ORDER BY id DESC LIMIT 1")
         result = self.cursor.fetchone()
         return result[0]+1
+    
+    # Get messages in topic
+    def getMessages(self, topicID):
+        self.cursor.execute("SELECT * FROM messages WHERE topicID="+str(topicID)+" ORDER BY id DESC")
+        result = self.cursor.fetchall()
+        data = getDictFromTuple(result, 'messages')
+        for i in range(len(data)):
+            print('AABLYAA: ' + str(data[i]['authorID']))
+            data[i]['authorLogin'] = self.getUserLoginByID(data[i]['authorID'])
+            data[i]['creationTime'] = getStrDate(data[i]['creationTime'])
+            if data[i]['image'] > 0:
+                data[i]['text'] += '<br><img src="/static/img/'+str(data[i]['image'])+'.jpg"></img>'
+        return data
 
     # Register operation
     def regUser(self, login, password, rpassword, email):
@@ -106,7 +118,6 @@ class Database():
                     self.cursor.execute(sql)
                     self.conn.commit()
                     data = self.cursor.fetchone()
-                    print(data)
                     return {'status': 'OK', 'data': data}
                 else:
                     return {'status': 'Error','text': 'Login or email already exists'}

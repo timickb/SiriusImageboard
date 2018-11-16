@@ -12,10 +12,10 @@ def getDictFromTuple(tpl, table):
             for i in range(len(element)):
                 result[TOPICS[i]] = element[i]
         else:
-            for i in range(len(tpl)):
+            for i in range(len(element)):
                 result[MESSAGES[i]] = element[i]
         gresult.append(result)
     return gresult
 
-r = getDictFromTuple(( (1, 'timickb', 'a23bc444', 'timi@ss.ru', '23782'), (2, 'timickb', 'a23bc444', 'timi@ss.ru', '23782') ), 'users')
+r = getDictFromTuple([(1, 'Всем привет', 15326732, 1, 1)], 'messages')
 print(r)

@@ -1,12 +1,13 @@
 {% include 'header.html' %}
-<h1 id="topic-header">{{ data.title }}</h1>
+<h1 id="topic-header">{{ data[0].title }}</h1>
 <div class="topic-info">
-    Author: {{ data.authorLogin }}<br>
-    Date: {{ data.creationTime }}<br>
+    Author: {{ data[0].authorLogin }}<br>
+    Date: {{ data[0].creationTime }}<br>
+    Description: {{ data[0].description }}<br>
 </div>
 <div id="topic-form">
     <form method="post">
-        <textarea class="field" cols="20" rows="4" placeholder="Write a message"></textarea><br>
+        <textarea class="field" cols="20" rows="4" placeholder="Write a message" name="text"></textarea><br>
         <div class="file-upload">
             <label>
                  <input type="file" name="file">
@@ -18,19 +19,15 @@
 </div>
 <p>3 comments</p>
 <div id="topic-comments">
-    <div class="topic">
-        <div class="topic-block-detail blue-colored">timickb</div>
-        <div class="topic-block-detail">13 Nov 2018 10:21</div>
-        <div class="topic-comment-text">
-            This is my second message in this topic.
+    {% for message in data[1] %}
+        <div class="topic">
+            <div class="topic-block-detail blue-colored">{{ message.authorLogin }}</div>
+            <div class="topic-block-detail">{{ message.creationTime }}</div>
+            <div class="topic-comment-text">
+                {{ message.text }}
+            </div>
         </div>
-    </div>
-    <div class="topic">
-        <div class="topic-block-detail blue-colored">timickb</div>
-        <div class="topic-block-detail">13 Nov 2018 10:17</div>
-        <div class="topic-comment-text">
-            Test topic created. I can write comments here.
-        </div>
-    </div>
+    {% endfor %}
+    
 </div>
 {% include 'footer.html' %}

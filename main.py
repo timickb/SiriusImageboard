@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, session, Session
+from flask import Flask, request, render_template, session, Session, redirect
 from flaskext.mysql import MySQL
 from database import Database
 
@@ -19,6 +19,8 @@ conn = mysql.connect()
 cursor = conn.cursor()
 database = Database(conn, cursor)
 
+online = []
+
 #---------------------------------------------------
 
 @app.route('/', methods=['GET'])
@@ -35,8 +37,8 @@ def login():
     elif request.method == 'POST':
         result = database.loginUser(request.form.get('login'), request.form.get('password'))
         if result['status'] == 'OK':
-            user = result['data']
-            return 'OK'
+            online.append(result['data']['id'])
+            return render_template('index.html')
         elif result['status'] == 'Error':
             return 'Wrong login or password'
 
@@ -64,10 +66,14 @@ def settings():
 
 @app.route('/topic/<topicID>/', methods=['GET', 'POST'])
 def topic(topicID):
+    messages = database.getMessages(topicID)
+    info = database.getTopicByID(topicID)
     if request.method == 'GET':
-        return render_template('topic.html', data=database.getTopicByID(topicID))
+        return render_template('topic.html', data=[info, messages])
     elif request.method == 'POST':
         text = request.form.get('text')
-        
+        database.postMessage(text, topicID, 1)
+        messages = database.getMessages(topicID)
+        return render_template('topic.html', data=[info, messages])
 
 app.run(host='0.0.0.0', port=8080, debug=True)

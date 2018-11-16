@@ -1,8 +1,8 @@
 {% include 'header.html' %}
-<h1 id="topic-header">Test topic</h1>
+<h1 id="topic-header">{{ data.title }}</h1>
 <div class="topic-info">
-    Author: timickb<br>
-    Date: 13 Nov 2018<br>
+    Author: {{ data.authorLogin }}<br>
+    Date: {{ data.creationTime }}<br>
 </div>
 <div id="topic-form">
     <form method="post">

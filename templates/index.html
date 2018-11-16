@@ -1,12 +1,14 @@
 {% include 'header.html' %}
 <h1>Topics</h1>
 <div id="topics-list">
+    {% for topic in topics %}
         <div class="topic">
-            <div class="topic-block-detail blue-colored">topic.authorLogin</div>
-            <div class="topic-block-detail">topic.date</div>
+            <div class="topic-block-detail blue-colored">{{ topic.authorLogin }}</div>
+            <div class="topic-block-detail">{{ topic.creationTime }}</div>
             <div class="topic-block-detail">8 comments</div>
             <br />
-            <a class="topic-title" href="/topic/1/">topic.title</a>
+            <a class="topic-title" href="/topic/1/">{{ topic.title }}</a>
         </div>
+    {% endfor %}
 </div>
 {% include 'footer.html' %}

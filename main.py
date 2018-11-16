@@ -23,7 +23,10 @@ database = Database(conn, cursor)
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    topics = database.getTopicsList()
+    print(topics)
+    database.getTopicByID(1)
+    return render_template('index.html', topics=topics)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -33,6 +36,9 @@ def login():
         result = database.loginUser(request.form.get('login'), request.form.get('password'))
         if result['status'] == 'OK':
             user = result['data']
+            return 'OK'
+        elif result['status'] == 'Error':
+            return 'Wrong login or password'
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -56,9 +62,12 @@ def settings():
     if request.method == 'GET':
         return render_template('settings.html')
 
-@app.route('/topic/<topicID>', methods=['GET', 'POST'])
+@app.route('/topic/<topicID>/', methods=['GET', 'POST'])
 def topic(topicID):
     if request.method == 'GET':
-        return render_template('topic.html')
+        return render_template('topic.html', data=database.getTopicByID(topicID))
+    elif request.method == 'POST':
+        text = request.form.get('text')
+        
 
 app.run(host='0.0.0.0', port=8080, debug=True)

@@ -10,6 +10,7 @@
     {{ result.status }}
 </div>
 {% endif %}
+{% if result.logged %}
 <div id="topic-form">
     <form method="post" enctype="multipart/form-data">
         <textarea class="field" cols="20" rows="4" placeholder="Write a message" name="text"></textarea><br>
@@ -22,6 +23,7 @@
         <input type="submit" class="button" value="Send" />
     </form>
 </div>
+{% endif %}
 <p>{{ result.data.messages|length }} comments</p>
 <div id="topic-comments">
     {% for message in result.data.messages %}
@@ -29,7 +31,12 @@
             <div class="topic-block-detail blue-colored">{{ message.authorLogin }}</div>
             <div class="topic-block-detail">{{ message.creationTime }}</div>
             <div class="topic-comment-text">
-                {{ message.text|safe }}
+                {{ message.text }}<br>
+                {% if message.image == 1 %}
+                <div class="message-image">
+                    <img src="/static/img/{{ message.id }}.jpg"></img>
+                </div>
+                {% endif %}
             </div>
         </div>
     {% endfor %}

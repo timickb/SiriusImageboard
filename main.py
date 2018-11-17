@@ -35,9 +35,9 @@ database = Database(conn, cursor)
 
 ALLOWED_EXTENSIONS = ['jpg', 'png', 'bmp', 'gif']
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+def handle_file(file_):
+    print(file_)
+    return True
 
 #---------------------------------------------------
 
@@ -162,9 +162,10 @@ def topic(topicID):
             r = database.postMessage(text, topicID, database.getUserIDByLogin(session['login']), count)
             if r == 'Error':
                 result['status'] = 'Invalid data'
+                return render_template('topic.html', result=result)
             elif r == 'OK':
-                if file_ and allowed_file(file_.filename):
-                    filename = str(database.getNextMessageID())+'.jpg'
+                if file_ and handle_file(file_):
+                    filename = str(database.getNextMessageID()-1)+'.jpg'
                     file_.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect('topic/'+topicID+'/')
         else:
@@ -201,6 +202,10 @@ def create():
                 return redirect('')
     else:
         return redirect('')
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html')
 
 app.secret_key = config['key']
 app.run(host='0.0.0.0', port=config['port'], debug=True)

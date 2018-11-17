@@ -146,11 +146,8 @@ class Database():
         result = self.cursor.fetchall()
         data = getDictFromTuple(result, 'messages')
         for i in range(len(data)):
-            print('AABLYAA: ' + str(data[i]['authorID']))
             data[i]['authorLogin'] = self.getUserLoginByID(data[i]['authorID'])
             data[i]['creationTime'] = getStrDate(data[i]['creationTime'])
-            if data[i]['image'] > 0:
-                data[i]['text'] += '<br><img src="/static/img/'+str(data[i]['id'])+'.jpg"></img>'
         return data
 
     # Register operation

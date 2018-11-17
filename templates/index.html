@@ -1,13 +1,13 @@
 {% include 'header.html' %}
-<h1>Topics</h1>
+<h1 class="line">Topics</h1> <button onclick="window.location.href='/create'" class="button line">Create topic</button>
 <div id="topics-list">
     {% for topic in result.data %}
         <div class="topic">
             <div class="topic-block-detail blue-colored">{{ topic.authorLogin }}</div>
             <div class="topic-block-detail">{{ topic.creationTime }}</div>
-            <div class="topic-block-detail">8 comments</div>
+            <div class="topic-block-detail">{{ topic.count }} comments</div>
             <br />
-            <a class="topic-title" href="/topic/1/">{{ topic.title }}</a>
+            <a class="topic-title" href="/topic/{{ topic.id }}/">{{ topic.title }}</a>
         </div>
     {% endfor %}
 </div>

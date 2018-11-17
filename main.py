@@ -139,10 +139,9 @@ def topic(topicID):
             result['logged'] = True
             result['userdata'] = database.getUserByLogin(session['login'])
             text = request.form.get('text')
-            database.postMessage(text, topicID, database.getUserIDByLogin(session['login']))
-            #messages = database.getMessages(topicID)
-            #result['data'] = {'info': info, 'messages': messages}
-            #return render_template('topic.html', result=result)
+            r = database.postMessage(text, topicID, database.getUserIDByLogin(session['login']))
+            if r == 'Error':
+                result['status'] = 'Invalid data'
             return redirect('topic/'+topicID+'/')
         else:
             return redirect('login')
@@ -152,6 +151,32 @@ def logout():
     if 'login' in session:
         del session['login']
     return redirect('')
+
+@app.route('/create', methods=['GET', 'POST'])
+def create():
+    result = {
+        'logged': False,
+        'status': -1,
+        'data': -1,
+        'userdata': -1
+    }
+    if 'login' in session:
+        result['logged'] = True
+        result['userdata'] = database.getUserByLogin(session['login'])
+        if request.method == 'GET':
+            return render_template('create.html', result=result)
+        elif request.method == 'POST':
+            title = request.form.get('title')
+            description = request.form.get('description')
+            authorID = database.getUserIDByLogin(session['login'])
+            r = database.createTopic(title, description, authorID)
+            if r == 'Error':
+                result['status'] = 'Invalid data'
+                return render_template('create.html', result=result)
+            else:
+                return redirect('')
+    else:
+        return redirect('')
 
 app.secret_key = config['key']
 app.run(host='0.0.0.0', port=config['port'], debug=True)

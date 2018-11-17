@@ -74,15 +74,32 @@ class Database():
             )
             self.cursor.execute(sql)
             self.conn.commit()
+            return 'OK'
+        else:
+            return 'Error'
+        
+    # Create topic
+    def createTopic(self, title, description, authorID):
+        if self.s.checkText(title) and self.s.checkText(description):
+            _id = self.getNextTopicID()
+            sql = "INSERT INTO topics VALUES ({}, '{}', '{}', {}, {}, {})".format(
+                str(_id), title, description, int(time()), authorID, 0
+            )
+            self.cursor.execute(sql)
+            self.conn.commit()
+            return 'OK'
+        else:
+            return 'Error'
     
     # Get topics
     def getTopicsList(self):
-        self.cursor.execute("SELECT * FROM topics")
+        self.cursor.execute("SELECT * FROM topics ORDER BY rating DESC")
         data = self.cursor.fetchall()
         data = getDictFromTuple(data, 'topics')
         for i in range(len(data)):
             data[i]['authorLogin'] = self.getUserLoginByID(data[i]['authorID'])
             data[i]['creationTime'] = getStrDate(data[i]['creationTime'])
+            data[i]['count'] = self.getMessagesCountInTopic(data[i]['id'])
         return data
     
     # Get topic by id
@@ -91,7 +108,12 @@ class Database():
         data = getDictFromTuple([self.cursor.fetchone()], 'topics')
         data[0]['authorLogin'] = self.getUserLoginByID(data[0]['authorID'])
         data[0]['creationTime'] = getStrDate(data[0]['creationTime'])
+        data[0]['count'] = self.getMessagesCountInTopic(data[0]['id'])
         return data[0]
+    
+    def getMessagesCountInTopic(self, id):
+        self.cursor.execute("SELECT * FROM messages WHERE topicID="+str(id))
+        return len(self.cursor.fetchall())
         
 
     # Get next id's

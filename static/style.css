@@ -121,6 +121,10 @@ h1 {
     background: deepskyblue;
 }
 
+.orange-colored {
+    background: orange;
+}
+
 .topic-title {
     font-size: 22pt;
     text-decoration: none;
@@ -178,4 +182,8 @@ textarea {
     margin: 5px;
     padding: 5px;
     border-radius: 9px;
+}
+
+.line {
+    display: inline-block;
 }

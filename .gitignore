@@ -2,3 +2,5 @@
 /logs
 /old
 __pycache__
+uploads
+config.yml

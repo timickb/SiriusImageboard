@@ -125,7 +125,28 @@ def settings():
         if request.method == 'GET':
             return render_template('settings.html', result=result)
         elif request.method == 'POST':
-            return render_template('settings.html', result=result)
+            uid = database.getUserIDByLogin(session['login'])
+            if request.form.get('change-email') != None:
+                print('AA  IISSJI JJKDSJKDSKJDSJKDSKJDSJK!!!')
+                oldEmail = request.form.get('change-email-old')
+                newEmail = request.form.get('change-email-new')
+                r = database.changeEmail(uid, oldEmail, newEmail)
+                if r == 'OK':
+                    result['status'] == 'Success'
+                else:
+                    result['status'] == 'Incorrect email'
+                return render_template('settings.html', result=result)
+            elif request.form.get('change-password') != None:
+                oldPassword = request.form.get('change-password-old')
+                newPassword = request.form.get('change-password-new')
+                rnewPassword = request.form.get('change-password-rnew')
+                r = database.changePassword(uid, oldPassword, newPassword, rnewPassword)
+                if r == 'OK':
+                    result['status'] == 'Success'
+                else:
+                    result['status'] == 'Incorrect password or passwords do not match'
+            else:
+                return render_template('settings.html', result=result)
     else:
         return redirect('login')
 
@@ -144,6 +165,7 @@ def topic(topicID):
         if 'login' in session:
             result['logged'] = True
             result['userdata'] = database.getUserByLogin(session['login'])
+            database.checkTopicStatus(topicID)
         return render_template('topic.html', result=result)
     elif request.method == 'POST':
         if 'login' in session:
@@ -206,6 +228,18 @@ def create():
 @app.errorhandler(404)
 def not_found(e):
     return render_template('404.html')
+
+@app.route('/like', methods=['GET'])
+def like():
+    topicID = request.args.get('id')
+    database.likeTopic(topicID)
+    return redirect('topic/'+str(topicID)+'/')
+
+@app.route('/dislike', methods=['GET'])
+def dislike():
+    topicID = request.args.get('id')
+    database.dislikeTopic(topicID)
+    return redirect('topic/'+str(topicID)+'/')
 
 app.secret_key = config['key']
 app.run(host='0.0.0.0', port=config['port'], debug=True)

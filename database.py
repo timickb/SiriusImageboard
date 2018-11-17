@@ -8,7 +8,7 @@ def getStrDate(unix):
 
 def getDictFromTuple(tpl, table):
     USERS = ('id', 'login', 'password', 'email', 'regTime')
-    TOPICS = ('id', 'title', 'description', 'creationTime', 'authorID', 'rating')
+    TOPICS = ('id', 'title', 'description', 'creationTime', 'authorID', 'rating', 'liked', 'disliked')
     MESSAGES = ('id', 'text', 'creationTime', 'topicID', 'authorID', 'image')
     gresult = []
     for element in tpl:
@@ -64,6 +64,35 @@ class Database():
         data = self.cursor.fetchall()
         data = getDictFromTuple(data, 'users')
         return data[0]
+    
+    def getUserEmailByID(self, id):
+        self.cursor.execute("SELECT * FROM users WHERE id="+str(id))
+        data = self.cursor.fetchone()
+        return data[2]
+    
+    def getUserPasswordByID(self, id):
+        self.cursor.execute("SELECT * FROM users WHERE id="+str(id))
+        data = self.cursor.fetchone()
+        return data[1]
+    
+    def changeEmail(self, uid, old, new):
+        current = self.getUserEmailByID(uid)
+        if current == old:
+            if self.s.checkEmail(new):
+                self.cursor.execute("UPDATE users SET email='"+new+"' WHERE id="+str(uid))
+                self.conn.commit()
+                return 'OK'
+        return 'Error'
+    
+    def changePassword(self, uid, old, new, rnew):
+        current = self.getUserPasswordByID(uid)
+        if current == self.s.sha256(old) and new == rnew:
+            if self.s.checkPassword(new):
+                new = self.s.sha256(new)
+                self.cursor.execute("UPDATE users SET password='"+new+"' WHERE id="+str(uid))
+                self.conn.commit()
+                return 'OK'
+        return 'Error'
 
     # Post message
     def postMessage(self, text, topicID, authorID, file_):
@@ -74,7 +103,11 @@ class Database():
             )
             self.cursor.execute(sql)
             self.conn.commit()
-            self.increaseTopicRating(topicID, 3)
+            rating = 3
+            difference = int(time()) - self.getLastMessageTimeInTopic(topicID)
+            if difference > 259200:
+                rating = -3
+            self.increaseTopicRating(topicID, rating)
             self.conn.commit()
             return 'OK'
         else:
@@ -92,6 +125,13 @@ class Database():
             return 'OK'
         else:
             return 'Error'
+    
+    def checkTopicStatus(self, topicID):
+        now = int(time())
+        self.cursor.execute("SELECT * FROM topics WHERE id="+str(topicID))
+        created = getDictFromTuple(self.cursor.fetchall(), 'topics')[0]['creationTime']
+        if ((now - created) > 86399):
+            self.increaseTopicRating(topicID, -2)
     
     # Get topics
     def getTopicsList(self):
@@ -113,6 +153,12 @@ class Database():
         data[0]['count'] = self.getMessagesCountInTopic(data[0]['id'])
         return data[0]
     
+    def likeTopic(self, topicID):
+        self.increaseTopicRating(topicID, 8)
+    
+    def dislikeTopic(self, topicID):
+        self.increaseTopicRating(topicID, -5)
+    
     def getMessagesCountInTopic(self, id):
         self.cursor.execute("SELECT * FROM messages WHERE topicID="+str(id))
         return len(self.cursor.fetchall())
@@ -121,7 +167,7 @@ class Database():
     def increaseTopicRating(self, topicID, value):
         self.cursor.execute("SELECT * FROM topics WHERE id="+str(topicID))
         data = self.cursor.fetchone()
-        rating = data[-1] + value
+        rating = getDictFromTuple([data], 'topics')[0]['rating'] + value
         self.cursor.execute("UPDATE topics SET rating="+str(rating)+" WHERE id="+str(topicID))
         self.conn.commit()
         
@@ -139,6 +185,12 @@ class Database():
         self.cursor.execute("SELECT * FROM messages ORDER BY id DESC LIMIT 1")
         result = self.cursor.fetchone()
         return result[0]+1
+    
+    def getLastMessageTimeInTopic(self, topicID):
+        self.cursor.execute("SELECT * FROM messages WHERE topicID="+str(topicID)+" ORDER BY creationTime LIMIT 1")
+        data = self.cursor.fetchall()
+        data = getDictFromTuple(data, 'messages')
+        return data[0]['creationTime']
     
     # Get messages in topic
     def getMessages(self, topicID):

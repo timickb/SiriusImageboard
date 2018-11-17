@@ -4,6 +4,10 @@
     Author: {{ result.data.info.authorLogin }}<br>
     Date: {{ result.data.info.creationTime }}<br>
     Description: {{ result.data.info.description }}<br>
+    {% if result.logged %}
+    <button class="button" onclick="window.location.href='/like?id={{ result.data.info.id }}'">Like</button>
+    <button class="button" onclick="window.location.href='/dislike?id={{ result.data.info.id }}'">Dislike</button>
+    {% endif %}
 </div>
 {% if result.status != -1 %}
 <div id="reg-status">

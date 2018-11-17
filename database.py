@@ -47,6 +47,23 @@ class Database():
         self.cursor.execute("SELECT * FROM users WHERE id="+str(id))
         data = self.cursor.fetchone()
         return data[1]
+    def getUserIDByLogin(self, login):
+        self.cursor.execute("SELECT * FROM users WHERE login='"+login+"'")
+        data = self.cursor.fetchone()
+        return data[0]
+    
+    # Get user by ID
+    def getUserByID(self, id):
+        self.cursor.execute("SELECT * FROM users WHERE id="+str(id))
+        data = self.cursor.fetchall()
+        data = getDictFromTuple(data, 'users')
+        return data[0]
+    
+    def getUserByLogin(self, login):
+        self.cursor.execute("SELECT * FROM users WHERE login='"+login+"'")
+        data = self.cursor.fetchall()
+        data = getDictFromTuple(data, 'users')
+        return data[0]
 
     # Post message
     def postMessage(self, text, topicID, authorID):

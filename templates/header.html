@@ -12,7 +12,11 @@
         <div id="header">
             <a id="logo" href="/">LOGO</a>
             <div id="menu">
+                {% if result.logged %}
+                <a class="menu-item" href="/settings">{{ result.userdata.login }}</a>
+                {% else %}
                 <a class="menu-item" href="/login">Sign in</a>
+                {% endif %}
             </div>
         </div>
         <div id="content">

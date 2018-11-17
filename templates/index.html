@@ -1,7 +1,7 @@
 {% include 'header.html' %}
 <h1>Topics</h1>
 <div id="topics-list">
-    {% for topic in topics %}
+    {% for topic in result.data %}
         <div class="topic">
             <div class="topic-block-detail blue-colored">{{ topic.authorLogin }}</div>
             <div class="topic-block-detail">{{ topic.creationTime }}</div>

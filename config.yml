@@ -1,5 +1,6 @@
 port: 8080
 dbHost: 'localhost'
 dbUser: 'root'
-dbPassword: ''
-dbName: 'board'
+dbPassword: '12345'
+dbName: 'forum'
+key: '6abc3520dabc238329aff930ba20cb293'

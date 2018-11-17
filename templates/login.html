@@ -1,8 +1,8 @@
 {% include 'header.html' %}
 <h1>Signing in</h1>
-{% if status %}
+{% if result.status != -1 %}
     <div id="reg-status">
-        {{ status }}
+        {{ result.status }}
     </div>
 {% endif %}
 <form method="post" id="signin">

@@ -6,6 +6,7 @@
             <div class="topic-block-detail blue-colored">{{ topic.authorLogin }}</div>
             <div class="topic-block-detail">{{ topic.creationTime }}</div>
             <div class="topic-block-detail">{{ topic.count }} comments</div>
+            <div class="topic-block-detail topic-rating blue-colored">☆{{ topic.rating }}</div>
             <br />
             <a class="topic-title" href="/topic/{{ topic.id }}/">{{ topic.title }}</a>
         </div>

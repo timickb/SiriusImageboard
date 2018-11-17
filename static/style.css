@@ -121,8 +121,13 @@ h1 {
     background: deepskyblue;
 }
 
-.orange-colored {
-    background: orange;
+.green-colored {
+    background: green;
+}
+
+.topic-rating {
+    background: green;
+    border-radius: 9px;
 }
 
 .topic-title {

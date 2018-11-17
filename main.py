@@ -1,7 +1,9 @@
 from flask import Flask, request, render_template, session, redirect
 from flaskext.mysql import MySQL
 from database import Database
+from werkzeug.utils import secure_filename
 import yaml
+import os
 
 #---------------------------------------------------
 
@@ -20,6 +22,7 @@ app = Flask(__name__)
 mysql = MySQL()
  
 # MySQL configurations
+app.config['UPLOAD_FOLDER'] = config['uploadPath']
 app.config['MYSQL_DATABASE_USER'] = config['dbUser']
 app.config['MYSQL_DATABASE_PASSWORD'] = config['dbPassword']
 app.config['MYSQL_DATABASE_DB'] = config['dbName']
@@ -29,6 +32,12 @@ mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor()
 database = Database(conn, cursor)
+
+ALLOWED_EXTENSIONS = ['jpg', 'png', 'bmp', 'gif']
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 #---------------------------------------------------
 
@@ -110,13 +119,15 @@ def settings():
         'data': -1,
         'userdata': -1
     }
-    if request.method == 'GET':
-        if 'login' in session:
-            result['logged'] = True
-            result['userdata'] = database.getUserByLogin(session['login'])
-        return render_template('settings.html', result=result)
+    if 'login' in session:
+        result['logged'] = True
+        result['userdata'] = database.getUserByLogin(session['login'])
+        if request.method == 'GET':
+            return render_template('settings.html', result=result)
+        elif request.method == 'POST':
+            return render_template('settings.html', result=result)
     else:
-        redirect('login')
+        return redirect('login')
 
 @app.route('/topic/<topicID>/', methods=['GET', 'POST'])
 def topic(topicID):
@@ -138,10 +149,23 @@ def topic(topicID):
         if 'login' in session:
             result['logged'] = True
             result['userdata'] = database.getUserByLogin(session['login'])
+
             text = request.form.get('text')
-            r = database.postMessage(text, topicID, database.getUserIDByLogin(session['login']))
+
+            file_ = None
+            try:
+                file_ = request.files['file']
+            except:
+                count = 0
+            if file_: count = 1
+
+            r = database.postMessage(text, topicID, database.getUserIDByLogin(session['login']), count)
             if r == 'Error':
                 result['status'] = 'Invalid data'
+            elif r == 'OK':
+                if file_ and allowed_file(file_.filename):
+                    filename = str(database.getNextMessageID())+'.jpg'
+                    file_.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect('topic/'+topicID+'/')
         else:
             return redirect('login')

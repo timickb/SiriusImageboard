@@ -66,13 +66,15 @@ class Database():
         return data[0]
 
     # Post message
-    def postMessage(self, text, topicID, authorID):
+    def postMessage(self, text, topicID, authorID, file_):
         if self.s.checkText(text):
             _id = self.getNextMessageID()
             sql = "INSERT INTO messages VALUES ({}, '{}', {}, {}, {}, {})".format(
-                str(_id), text, int(time()), topicID, authorID, 0
+                str(_id), text, int(time()), topicID, authorID, file_
             )
             self.cursor.execute(sql)
+            self.conn.commit()
+            self.increaseTopicRating(topicID, 3)
             self.conn.commit()
             return 'OK'
         else:
@@ -114,6 +116,14 @@ class Database():
     def getMessagesCountInTopic(self, id):
         self.cursor.execute("SELECT * FROM messages WHERE topicID="+str(id))
         return len(self.cursor.fetchall())
+    
+    # increase topic's rating
+    def increaseTopicRating(self, topicID, value):
+        self.cursor.execute("SELECT * FROM topics WHERE id="+str(topicID))
+        data = self.cursor.fetchone()
+        rating = data[-1] + value
+        self.cursor.execute("UPDATE topics SET rating="+str(rating)+" WHERE id="+str(topicID))
+        self.conn.commit()
         
 
     # Get next id's
@@ -140,7 +150,7 @@ class Database():
             data[i]['authorLogin'] = self.getUserLoginByID(data[i]['authorID'])
             data[i]['creationTime'] = getStrDate(data[i]['creationTime'])
             if data[i]['image'] > 0:
-                data[i]['text'] += '<br><img src="/static/img/'+str(data[i]['image'])+'.jpg"></img>'
+                data[i]['text'] += '<br><img src="/static/img/'+str(data[i]['id'])+'.jpg"></img>'
         return data
 
     # Register operation

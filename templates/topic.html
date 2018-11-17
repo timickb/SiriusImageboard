@@ -29,7 +29,7 @@
             <div class="topic-block-detail blue-colored">{{ message.authorLogin }}</div>
             <div class="topic-block-detail">{{ message.creationTime }}</div>
             <div class="topic-comment-text">
-                {{ message.text }}
+                {{ message.text|safe }}
             </div>
         </div>
     {% endfor %}

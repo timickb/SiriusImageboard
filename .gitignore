@@ -1,6 +1,6 @@
 /node_modules
 /logs
 /old
-__pycache__
-uploads
+/__pycache__
+/uploads
 config.yml
